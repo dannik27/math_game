@@ -1,0 +1,172 @@
+<html>
+
+<body>
+
+  <div id="app">
+    <div class="settings" v-show="state == 'settings'">
+      <div>
+        <input type="checkbox" v-model="settings.mul.enabled" /> умножение 
+        сложность:
+        <input type="number" v-model="settings.mul.difficulty" min=2>
+      </div>
+      <div>
+        <input type="checkbox" v-model="settings.sum.enabled"/> сложение 
+        сложность:
+        <input type="number" v-model="settings.sum.difficulty" min=2>
+      </div>
+      <div> 
+        таймер:
+        <input type="number" value=60 min=5 v-model="timerValue">
+      </div>
+      <button v-on:click="start()"> start </button>
+
+    
+    </div>
+    
+    <div class="main" id="main" v-show="state == 'main'">
+      <div>
+        <div class="left">
+
+          <div class="box" id="box">
+          
+            <div style="display: flex">
+          
+                <div class="question" id="question">
+                  {{ currentQuestion.a }} * {{ currentQuestion.b }}
+                </div>
+          
+                <div class="result-box" id="result-box" v-on:click="nextStage()" v-show="showAnswer" v-bind:style="{ backgroundColor: resultBox.color}"> {{ resultBox.content }} </div>
+            
+            </div>
+          
+            <div class="answer" id="answer">
+             {{ input }}
+            </div>
+          
+            <div class="keyboard">
+              <div class="keyboard-row">
+                  <button v-on:click="updateInput('1')"> 1 </button>
+                  <button v-on:click="updateInput('2')"> 2 </button>
+                  <button v-on:click="updateInput('3')"> 3 </button>
+              </div>
+              <div class="keyboard-row">
+                  <button v-on:click="updateInput('4')"> 4 </button>
+                  <button v-on:click="updateInput('5')"> 5 </button>
+                  <button v-on:click="updateInput('6')"> 6 </button>
+              </div>
+              <div class="keyboard-row">
+                  <button v-on:click="updateInput('7')"> 7 </button>
+                  <button v-on:click="updateInput('8')"> 8 </button>
+                  <button v-on:click="updateInput('9')"> 9 </button>
+              </div>
+              <div class="keyboard-row">
+                  <button v-on:click="updateInput('0')"> 0 </button>
+                  <button v-on:click="updateInput('<')"> < </button>
+              </div>
+            </div>
+          
+            <button class="answer-button" v-on:click="answer()" v-bind:style="{ backgroundColor: answerButton.color}"> {{ answerButton.content }} </button>
+          
+          </div>
+          
+        </div>
+          
+        <div class="right">
+            <button v-on:click="stop()"> <-- </button>
+            <div id="timer-box" class="timer-box">
+              {{ timerValue }}
+            </div>
+          
+        </div>
+      </div>
+    
+    
+    
+    </div>
+    
+    <div class="report-box" v-show="state == 'report'">
+        <div>score: {{ score }} </div>
+        <div v-for="q in questions" v-if="q.answer" v-bind:class="[(q.answer == q.result) ? 'green' : 'red']">
+          <span> {{ q.a }} </span>
+          <span> {{ q.operation }} </span>
+          <span> {{ q.b }} </span>
+          <span> = </span>
+          <span> {{ q.answer }} </span>
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+<script type="text/javascript" src="vue.js" ></script>
+<script type="text/javascript" src="script.js" ></script>
+
+<style>
+
+.box {
+  background-color: #CCC;
+}
+
+.question {
+  font-size: 100px;
+  display: block;
+}
+
+.answer {
+  font-size: 80px
+}
+
+button {
+  font-size: 40px
+}
+
+.answer-button {
+  background-color: #EEE;
+  width: 230px;
+}
+
+.result-box {
+  background-color: #4C6;
+  font-size: 100px;
+  margin-left: 50px;
+}
+
+.report-box {
+  background-color: #ccc;
+  font-size: 60px
+}
+
+.left {
+  width: 500px;
+}
+
+.right {
+  font-size: 150px;
+  padding-left: 40px
+}
+
+.main {
+}
+
+.main > div {
+  display: flex;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: #4C6;
+}
+
+</style>
+
+
+
+
+</body>
+
+</html>

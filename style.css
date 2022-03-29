@@ -1,0 +1,76 @@
+.box {
+    background-color: #CCC;
+  }
+  
+  .question {
+    font-size: 100px;
+    display: block;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-align: center;
+  }
+  
+  .answer {
+    font-size: 80px;
+    text-align: center;
+  }
+  
+  button {
+    font-size: 40px
+  }
+  
+  .answer-button {
+    background-color: #EEE;
+  }
+  
+  .result-box {
+    display: none;
+    background-color: #4C6;
+    font-size: 100px;
+    margin-left: 50px;
+  }
+  
+  .report-box {
+    background-color: #ccc;
+    font-size: 60px
+  }
+  
+  .left {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 1em;
+  }
+
+  .left div:nth-child(1), .left div:nth-child(2), .left div:nth-child(3), .left button:nth-child(15) {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+
+  .red {
+    background-color: red;
+  }
+  
+  .green {
+    background-color: #4C6;
+  }
+
+  .main-controls {
+      display: flex
+  }
+
+  .main-controls div {
+    margin-left: 50px;
+    padding: 10px;
+    font-size: 50px;
+}
+
+.report-controls {
+    display: flex
+}
+
+.report-controls div {
+    margin-left: 20px;
+    padding: 10px;
+    font-size: 50px;
+}
