@@ -1,7 +1,13 @@
 .box {
     background-color: #CCC;
   }
-  
+
+.menu {
+    padding: 30px;
+    gap: 40px;
+    display: flex;
+    flex-direction: column;
+}
   .question {
     font-size: 100px;
     display: block;

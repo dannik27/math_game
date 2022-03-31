@@ -27,7 +27,8 @@ const app = new Vue({
         enabled: false,
         difficulty: 50
       },
-      questionsLimit: 100
+      questionsLimit: 100,
+      gameMode: "mul"
     },
     questions: [
       {
@@ -90,19 +91,30 @@ const app = new Vue({
       this.questions = []
       for(let i = 0; i < this.settings.questionsLimit; i++) {
 
-        let a = randomNumber(2, 9)
-        let b = randomNumber(2, 9)
-
-        this.questions.push({
-          a,
-          b,
-          operation: "*",
-          result: a * b
-        })
+        if (this.gameMode == 'mul') {
+          let a = randomNumber(2, 9)
+          let b = randomNumber(2, 9)
+          this.questions.push({
+            a,
+            b,
+            operation: "*",
+            result: a * b
+          })
+        } else {
+          let a = randomNumber(10, 90)
+          let b = randomNumber(1, 9)
+          this.questions.push({
+            a,
+            b,
+            operation: "+",
+            result: a + b
+          })
+        }
       }
     },
 
-    start() {
+    start(gameMode) {
+      this.gameMode = gameMode
       this.generateQuestions()
       this.state = 'main'
       this.input = "0"
