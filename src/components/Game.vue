@@ -5,7 +5,7 @@
       
 
       
-      <button v-on:click="stop()" > &lt;- Меню </button>
+      <button class="menu-button" v-on:click="stop()" > &lt;- Меню </button>
       <div class="timer"> {{ timerValue }} </div>
        
 
@@ -13,7 +13,6 @@
   
       <div class="question" id="question" >
           <span> {{ question }} </span>
-          <!-- <span :style="{visibility: (answerResult != 'none') ? 'visible' : 'hidden'}"> = {{ correctResult }} </span> -->
           <span v-if="answerResult != 'none'"> = {{ correctResult }} </span>
 
       </div>
@@ -24,16 +23,10 @@
       {{ input }}
       </div>
 
-      <button v-for="button in keyboardButtons" v-bind:key="button"  v-on:click="enterNumber(button)" > {{ button }}</button>
-      <button  v-on:click="deleteNumber()" > &lt; </button>
+      <button class="keyboard-button" v-for="button in keyboardButtons" v-bind:key="button"  v-on:click="enterNumber(button)" > {{ button }}</button>
+      <button class="keyboard-button" v-on:click="deleteNumber()" > &lt; </button>
     
-      <button class="answer-button" v-on:click="answer()" v-bind:class="{red: (answerResult == 'wrong'), green: (answerResult == 'correct')}"> >> </button>
-
-      <!-- <div v-on:click="answer()">
-        <button> >> </button>
-        <div> correct </div>
-        <div> incorrect </div>
-      </div> -->
+      <button class="answer-button" v-on:click="answer()" v-bind:class="{red: (answerResult == 'wrong'), green: (answerResult == 'correct')}"> Ответ </button>
     
       
     </div>
@@ -47,11 +40,20 @@ import router from '../router'
 import store from '../store'
 import { onMounted, onUnmounted, ref, computed } from "vue";
 
-const TIMER_VALUE_INIT = 3
+const TIMER_VALUE_INIT = 60
 const QUESTIONS_LIMIT = 100
 
 function randomNumber(a, b) {
   return a + Math.floor(Math.random() * (b - a));
+}
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
 }
 
 export default {
@@ -179,22 +181,63 @@ export default {
     }
 
     const generateQuestions = () => {
-      questions.length = 0
-      for(let i = 0; i < QUESTIONS_LIMIT; i++) {
+      questions.length = 0 
 
-        if (props.gameMode == 'mul') {
-          let a = randomNumber(2, 9)
-          let b = randomNumber(2, 9)
+      if (props.gameMode == 'mul') {
+
+        let data = []
+
+        for (let i = 2; i < 10; i++) {
+            for (let j = 2; j < i; j++) {
+                data.push([i, j])
+                data.push([j, i])
+            }
+            data.push[i, i]
+        }
+
+
+        let result = []
+
+        for (let i = 0; i < 25; i++) {
+          let found = false
+          while (!found) {
+            let indexInBlock = randomNumber(0, 3)
+            let indexInArray = i * 2 + indexInBlock
+            if (!result.includes(indexInArray)) {
+              result.push(indexInArray)
+              found = true
+            }
+          }
+        }
+
+        let other = []
+
+        for (let i = 40; i < data.length; i++) {
+          if (! result.includes(i)) {
+            other.push(i)
+          }
+        }
+
+        shuffleArray(other)
+
+        result = result.concat(other)
+
+        for (let index of result) {
+          let a = data[index][0]
+          let b = data[index][1]
           questions.push({
-            id: i,
+            id: index,
             a,
             b,
             operation: "*",
             result: a * b
-          })
-        } else {
-          let a = randomNumber(10, 90)
-          let b = randomNumber(1, 9)
+        })
+        }
+
+      } else {
+        for(let i = 0; i < QUESTIONS_LIMIT; i++) {
+          let a = randomNumber(0, 9) * 10 + randomNumber(5, 9)
+          let b = randomNumber(0, 9) * 10 + randomNumber(5, 9)
           questions.push({
             id: i,
             a,
@@ -265,4 +308,13 @@ export default {
   grid-column-start: 1;
   grid-column-end: 4;
 }
+
+.keyboard-button, .answer-button {
+  font-size: 50px;
+}
+
+.menu-button {
+  font-size: 30px;
+}
+
 </style>

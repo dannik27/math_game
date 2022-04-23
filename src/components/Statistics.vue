@@ -4,6 +4,11 @@
 
     <button v-on:click="menu()" > &lt;- Меню </button>
 
+    <div class="modes-container">
+      <button v-on:click="setMode('mul')" v-bind:class="{ 'green-button': mode == 'mul' }" > Умножение </button>
+      <button v-on:click="setMode('sum')" v-bind:class="{ 'green-button': mode == 'sum' }" > Сложение </button>
+    </div>
+
     <table>
       <tr>
         <th>Имя</th>
@@ -25,6 +30,7 @@
 
 import router from '../router'
 import storage from '../storage/storage'
+import { reactive, computed, ref, onMounted } from 'vue'
 
 export default {
   name: 'StatisticsView',
@@ -33,10 +39,22 @@ export default {
   },
   setup() {
 
-    let leaders = []
-    let statistics = storage
-        .loadOrDefault("mul", [])
-        .sort((a, b) => {
+    let statisticsByMode = reactive({})
+    let mode = ref("mul")
+
+    onMounted(async () => {
+      for (let m of ["mul", "sum"]) {
+        statisticsByMode[m] = await storage.loadOrDefault(m, [])
+      }
+    })
+
+    let leaders = computed(() => {
+      let statistics = statisticsByMode[mode.value]
+      if (!statistics){
+        return []
+      }
+      let response = []
+      statistics = statistics.sort((a, b) => {
           if (a.name == b.name) {
             return b.score - a.score
           } else {
@@ -44,28 +62,26 @@ export default {
           }
         });
 
-    console.log("---")
-    console.log(statistics)
-
-    if (statistics.length > 0) {
-      let currentName = statistics[0].name
-      leaders.push(statistics[0])
-      for (let i = 0; i < statistics.length; i++) {
-        console.log("+")
-        console.log(statistics[i].name)
-        if (statistics[i].name != currentName) {
-          currentName = statistics[i].name
-          leaders.push(statistics[i])
+      if (statistics.length > 0) {
+        let currentName = statistics[0].name
+        response.push(statistics[0])
+        for (let i = 0; i < statistics.length; i++) {
+          if (statistics[i].name != currentName) {
+            currentName = statistics[i].name
+            response.push(statistics[i])
+          }
         }
       }
-    }
 
-    leaders = leaders.sort((a, b) => {
-      return b.score - a.score
+      return response.sort((a, b) => {
+        return b.score - a.score
+      })
+
     })
 
-    console.log("|||")
-    console.log(leaders)
+    const setMode = (newMode) => {
+      mode.value = newMode
+    }
     
     const menu = () => {
       router.push("/")
@@ -73,6 +89,9 @@ export default {
 
     return {
       menu,
+      mode,
+      setMode,
+      statisticsByMode,
       leaders
     }
   },
@@ -88,7 +107,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 
 table {
@@ -106,6 +125,21 @@ th, td {
 .record-column, .date-column {
   max-width: 200px;
   width: 10%;
+}
+
+button {
+  font-size: 30px;
+}
+
+.modes-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px
+
+}
+
+.green-button {
+  background-color: greenyellow;
 }
 
 </style>

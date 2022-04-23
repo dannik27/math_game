@@ -5,7 +5,7 @@ export default {
         localStorage.setItem(key, JSON.stringify(value));
     },
 
-    load(key) {
+    async load(key) {
         return JSON.parse(localStorage.getItem(key))
     }
 

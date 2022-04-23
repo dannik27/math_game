@@ -5,7 +5,7 @@ export default {
         state[key] = value
     },
 
-    load(key) {
+    async load(key) {
         return state[key]
     }
 }

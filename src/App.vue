@@ -40,9 +40,6 @@ export default {
   text-align: center;
 }
 
-button {
-  font-size: 40px
-}
 
 .answer-button {
   background-color: #EEE;

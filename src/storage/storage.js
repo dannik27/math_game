@@ -3,6 +3,7 @@ console.log("Platform " + process.env.VUE_APP_PLATFORM)
 
 import localStorage from "./localStorage"
 import inMemoryStorage from "./inMemoryStorage"
+import capacitorFilesystemStorage from "./capacitorFilesystemStorage"
 
 let implementation
 switch(process.env.VUE_APP_PLATFORM) {
@@ -10,7 +11,7 @@ switch(process.env.VUE_APP_PLATFORM) {
         implementation = localStorage
         break;
     case "android":
-        implementation = localStorage
+        implementation = capacitorFilesystemStorage
         break;
     default:
         implementation = inMemoryStorage
@@ -28,8 +29,11 @@ export default {
     },
 
     loadOrDefault(key, defaultValue) {
-        let value = implementation.load(key)
-        return value ? value : defaultValue
+        console.log(implementation)
+        return implementation.load(key)
+            .then(value => {
+                return value ? value : defaultValue
+            })
     }
 
 }

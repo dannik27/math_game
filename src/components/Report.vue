@@ -4,9 +4,12 @@
 
       <div class="report-controls">
         <button v-on:click="stop()" > &lt;- Меню </button>
-        <div> Счёт: {{ score }} </div>
-        <input type="text" v-model="playerName" />
+        <div></div>
+        <input type="text" placeholder="Имя" v-model="playerName" />      
         <button v-on:click="save()" > Сохранить </button>
+      </div>  
+      <div class="report-controls">
+        <div> Счёт: {{ score }} </div>
       </div>  
 
       <div v-for="q in answeredQuestions" v-bind:key="q.id" v-bind:class="[(q.result == q.answer) ? 'green' : 'red']">
@@ -56,9 +59,9 @@ export default {
       router.push("/")
     }
 
-    const save = function() {
+    const save = async function() {
 
-      let statistics = storage.loadOrDefault(store.gameMode, [])
+      let statistics = await storage.loadOrDefault(store.gameMode, [])
 
       statistics.push({
         name: playerName.value,
@@ -95,21 +98,25 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .report-controls {
     display: flex
 }
 
 .report-controls div {
-    margin-left: 20px;
-    padding: 10px;
+    padding: 5px;
     font-size: 50px;
+    flex-grow: 1
 }
 
 input {
-  font-size: 50px;
-  max-width: 300px;
+  font-size: 30px;
+  max-width: 150px;
+}
+
+button {
+  font-size: 30px;
 }
 
 </style>
